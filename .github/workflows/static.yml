@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Desk Status</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    text-align:center;
+    margin-top:120px;
+}
+
+.circle{
+    width:220px;
+    height:220px;
+    border-radius:50%;
+    margin:auto;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+    color:white;
+    font-weight:bold;
+}
+
+.meeting{background:#e74c3c;}
+.working{background:#2ecc71;}
+.remote{background:#3498db;}
+.backsoon{background:#f39c12;}
+.dnd{background:#34495e;}
+
+.updated{
+    margin-top:20px;
+    color:#666;
+}
+</style>
+
+</head>
+
+<body>
+
+<h2>Krishna Desk Status</h2>
+
+<div id="circle" class="circle">Loading...</div>
+
+<div class="updated" id="updated"></div>
+
+<script>
+
+const scriptURL = "PASTE_YOUR_GOOGLE_SCRIPT_URL_HERE";
+
+function loadStatus(){
+
+fetch(scriptURL)
+.then(res => res.json())
+.then(data => {
+
+let circle = document.getElementById("circle");
+
+let status = data.status.toLowerCase();
+
+circle.className="circle";
+
+if(status.includes("meeting")) circle.classList.add("meeting");
+else if(status.includes("remote")) circle.classList.add("remote");
+else if(status.includes("back")) circle.classList.add("backsoon");
+else if(status.includes("disturb")) circle.classList.add("dnd");
+else circle.classList.add("working");
+
+circle.innerText=data.status;
+
+document.getElementById("updated").innerText =
+"Updated: " + data.updated;
+
+});
+
+}
+
+loadStatus();
+
+/* Auto refresh every 20 seconds */
+
+setInterval(loadStatus,20000);
+
+</script>
+
+</body>
+</html>
